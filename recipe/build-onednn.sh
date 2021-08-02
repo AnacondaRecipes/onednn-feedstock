@@ -6,8 +6,14 @@ if [[ "${target_platform}" == "linux-64" ]]; then
   export LDFLAGS="-lrt ${LDFLAGS}"
 fi
 
-mkdir build
-pushd build
+CMAKE_ARGS="${CMAKE_ARGS:-} -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=${PREFIX} -DCMAKE_INSTALL_PREFIX=${PREFIX} -DCMAKE_INSTALL_LIBDIR=lib"
+if [[ "${target_platform}" == "osx-64" ]]; then
+  CMAKE_ARGS="${CMAKE_ARGS} -DCMAKE_OSX_SYSROOT=${CONDA_BUILD_SYSROOT}"
+fi
+
+mkdir build-${dnnl_cpu_runtime}
+pushd build-${dnnl_cpu_runtime}
+
 if [[ "${dnnl_cpu_runtime}" == "tbb" ]]; then
   export TBBROOT=${PREFIX}
   DNNL_CPU_RUNTIME="TBB"

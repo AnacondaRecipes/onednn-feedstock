@@ -10,8 +10,11 @@ if [%dnnl_cpu_runtime%]==[tbb] (
 if [%dnnl_cpu_runtime%]==[omp] set DNNL_CPU_RUNTIME=OMP
 if [%dnnl_cpu_runtime%]==[threadpool] set DNNL_CPU_RUNTIME=THREADPOOL
 
-cmake -GNinja %CMAKE_ARGS% ^
+cmake -GNinja ^
+  -DCMAKE_BUILD_TYPE=Release ^
   -DCMAKE_INSTALL_PREFIX=%LIBRARY_PREFIX% ^
+  -DCMAKE_INSTALL_LIBDIR=lib ^
+  -DCMAKE_PREFIX_PATH=%LIBRARY_PREFIX% ^
   -DDNNL_CPU_RUNTIME=%DNNL_CPU_RUNTIME% ^
   -DDNNL_GPU_RUNTIME=NONE ^
   ..

@@ -13,6 +13,14 @@ source:
 
 build:
   number: 0
+  # "oneDNN supports 64 bit platforms only"
+  skip: true  # [win32]
+
+requirements:
+  build:
+    - git
+    - patch     # [not win]
+    - m2-patch  # [win]
 
 outputs:
   - name: {{ name|lower }}
@@ -33,10 +41,12 @@ outputs:
         - ninja
         - {{ compiler('c') }}
         - {{ compiler('cxx') }}
-        - llvm-openmp  # [osx]
+        - llvm-openmp  # [osx and dnnl_cpu_runtime == "omp"]
       host:
         - tbb        # [dnnl_cpu_runtime == "tbb"]
         - tbb-devel  # [dnnl_cpu_runtime == "tbb"]
+      run:
+        - _openmp_mutex     # [dnnl_cpu_runtime == "omp" and linux and not ppc64le]
     about:
       home: https://github.com/oneapi-src/oneDNN
       license: Apache-2.0
